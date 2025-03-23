@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>¿Jugamos? 🎮</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(45deg, #ff61d8, #6e78ff);
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 40px;
+            padding: 0 20px;
+            text-shadow: 3px 3px 0 #000;
+            animation: bounce 1s infinite;
+        }
+
+        .meme-face {
+            font-size: 100px;
+            margin-bottom: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 24px;
+            border: 3px solid black;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-family: 'Comic Sans MS', cursive;
+            font-weight: bold;
+            box-shadow: 5px 5px 0 black;
+        }
+
+        #yesBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #noBtn {
+            background-color: #f44336;
+            color: white;
+            position: relative;
+        }
+
+        button:hover {
+            transform: scale(1.05) rotate(-2deg);
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .messages {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        @media (max-height: 400px) {
+            h1 { font-size: 24px; }
+            .meme-face { font-size: 60px; }
+            button { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="meme-face">🤔</div>
+    <h1>¿Echamos una partida? 🎮</h1>
+    <div class="buttons">
+        <button id="yesBtn">¡OBVIO! 🔥</button>
+        <button id="noBtn">Nel pastel 🙄</button>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const body = document.body;
+        let clickCount = 0;
+
+        function moveButton(e) {
+            // Prevent all default behaviors
+            if (e) e.preventDefault();
+            
+            const maxX = window.innerWidth - noBtn.clientWidth - 20;
+            const maxY = window.innerHeight - noBtn.clientHeight - 20;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+
+            const messages = ['¡Jaja, muy lento! 😜', '¡Casi! 😏', 'Inténtalo otra vez 😎', '¡Nop! 🤪'];
+            createFloatingMessage(messages[Math.floor(Math.random() * messages.length)]);
+            clickCount++;
+            
+            if (clickCount > 5) {
+                noBtn.textContent = "Ya ríndete 😅";
+            }
+            return false;
+        }
+
+        function showSuccess() {
+            body.innerHTML = '<div style="font-size: 100px; animation: bounce 1s infinite;">🎉</div><h1 style="margin-top: 20px;">¡SABÍA QUE DIRÍAS QUE SÍ!</h1>';
+        }
+
+        // Mobile events
+        noBtn.ontouchstart = moveButton;
+        noBtn.ontouchmove = moveButton;
+        noBtn.ontouchend = moveButton;
+        
+        // Desktop events
+        noBtn.onmouseover = moveButton;
+        noBtn.onclick = moveButton;
+
+        // Yes button events
+        yesBtn.ontouchstart = showSuccess;
+        yesBtn.onclick = showSuccess;
+
+        // Prevent scrolling when touching the buttons
+        document.body.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+        }, { passive: false });
+
+        function createFloatingMessage(text) {
+            const message = document.createElement('div');
+            message.className = 'messages';
+            message.textContent = text;
+            message.style.left = Math.random() * (window.innerWidth - 200) + 'px';
+            message.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+            body.appendChild(message);
+            setTimeout(() => message.remove(), 1000);
+        }
+    </script>
+</body>
+</html>
